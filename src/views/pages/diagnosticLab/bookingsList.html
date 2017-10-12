@@ -1,0 +1,90 @@
+<% include ../../partials/header.html %>
+<link rel="stylesheet" href="/css/lib/datatables/dataTables.bootstrap.css" />
+<!-- BEGIN HEADER & CONTENT DIVIDER -->
+<div class="clearfix"> </div>
+<!-- END HEADER & CONTENT DIVIDER -->
+<!-- BEGIN CONTAINER -->
+<div class="page-container" style="height: 100%;">
+    <% include ../../partials/sidebar.html %>
+    <!-- BEGIN CONTENT -->
+    <div class="page-content-wrapper">
+        <!-- BEGIN CONTENT BODY -->
+        <div ng-app="bookingModule" ng-controller="bookingController" class="page-content" style="min-height: 1001px;">
+            <!-- BEGIN PAGE HEADER-->
+
+            <!-- BEGIN PAGE TITLE-->
+            <h1 class="page-title">
+                <h1 class="page-title"> Bookings</h1>
+                <!--<small>statistics, charts, recent events and reports</small>-->
+            </h1>
+            <!-- END PAGE TITLE-->
+            <!-- BEGIN PAGE BAR -->
+            <div class="page-bar">
+                <ul class="page-breadcrumb">
+                    <li>
+                        <a href="/">Home</a>
+                        <i class="fa fa-arrow-right"></i>
+                    </li>
+                    <li>
+                        <span>Bookings</span>
+                    </li>
+                </ul>
+            </div>
+            <!-- END PAGE BAR -->
+            <!-- END PAGE HEADER-->
+
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+
+                    <table datatable="ng" dt-options="dtOptions" dt-column-defs="dtColumnDefs" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Booking Type</th>
+                                <th>Diagnostic Test</th>
+                                <th>Full Name</th>
+                                <th>Status</th>
+                                <th>Created At</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="booking in bookings">
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ booking.bookingType }}</td>
+                                <td>{{ booking.diagnosticTest.name }}</td>
+                                <td>{{ booking.userId.firstname }}&nbsp;{{ booking.userId.lastname }}</td>
+                                <td>{{ booking.status }}</td>
+                                <td>{{ booking.createdAt | date : 'MMM d, y h:mm a' }}</td>
+                                <td>
+                                    <button class="btn btn-primary" ng-click="remove($index)">
+                                        <i class="fa fa-cogs" aria-hidden="true"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+        <!-- END CONTENT BODY -->
+    </div>
+    <!-- END CONTENT -->
+
+</div>
+<!-- END CONTAINER -->
+
+<!-- BEGIN FOOTER -->
+<% include ../../partials/footer.html %>
+<!-- BEGIN FOOTER -->
+
+<!-- BEGIN CORE PLUGINS -->
+<% include ../../partials/coreplugins.html %>
+<!-- END CORE PLUGINS -->
+
+<script src="/js/lib/angular/angular.js"></script>
+<script src="/js/lib/datatables/jquery.dataTables.js"></script>
+<script src="/js/lib/datatables/dataTables.bootstrap.js"></script>
+<script src="/js/lib/datatables/angular-datatables.js"></script>
+<script src="/js/bookingModule/bookingController.js"></script>

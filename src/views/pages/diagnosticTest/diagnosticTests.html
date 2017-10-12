@@ -1,0 +1,195 @@
+<% include ../../partials/header.html %>
+<!--<link rel="stylesheet" href="/css/lib/datatables/jquery.dataTables.css" />-->
+<link rel="stylesheet" href="/css/lib/datatables/dataTables.bootstrap.css" />
+<!-- BEGIN HEADER & CONTENT DIVIDER -->
+<div class="clearfix"> </div>
+<!-- END HEADER & CONTENT DIVIDER -->
+<!-- BEGIN CONTAINER -->
+<div class="page-container" style="height: 100%;">
+    <% include ../../partials/sidebar.html %>
+    <!-- BEGIN CONTENT -->
+    <div class="page-content-wrapper">
+        <!-- BEGIN CONTENT BODY -->
+        <div ng-app="diagnosticTestModule" ng-controller="diagnosticTestController" class="page-content" style="min-height: 1001px;">
+            <!-- BEGIN PAGE HEADER-->
+
+            <!-- BEGIN PAGE TITLE-->
+            <h1 class="page-title">
+                <h1 class="page-title"> Diagnostic Tests</h1>
+                <!--<small>statistics, charts, recent events and reports</small>-->
+            </h1>
+            <!-- END PAGE TITLE-->
+            <!-- BEGIN PAGE BAR -->
+            <div class="page-bar">
+                <ul class="page-breadcrumb">
+                    <li>
+                        <a href="/">Home</a>
+                        <i class="fa fa-arrow-right"></i>
+                    </li>
+                    <li>
+                        <span>Diagnostic Tests</span>
+                    </li>
+                </ul>
+            </div>
+            <!-- END PAGE BAR -->
+            <!-- END PAGE HEADER-->
+
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+
+                    <table datatable="ng" dt-options="dtOptions" dt-column-defs="dtColumnDefs" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Description</th>
+                                <th>Physical Presence</th>
+                                <th>Required Samples</th>
+                                <th>Cost</th>
+                                <th>Created At</th>
+                                <th>Updated At</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="value in diagnosticTestList">
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ value.name }}</td>
+                                <td>{{ value.category.name }}</td>
+                                <td>
+                                    <p ng-if="!value.showFullDesc">
+                                        {{ substring(value.description, 140) }}
+                                        <button class="btn btn-primary btn-xs" ng-click="showMore($index)">>> more</button>
+                                    </p>
+                                    <p ng-if="value.showFullDesc">
+                                        {{ value.description }}
+                                        <button class="btn btn-primary btn-xs" ng-click="showLess($index)"><< less</button>
+                                    </p>
+                                </td>
+                                <td>{{ ((value.presenceRequired) ? 'Required' : 'Not Required') }}</td>
+                                <td>{{ ((value.samplesRequired.length == 0) ? 'None' : joinStr(value.samplesRequired, ', ')) }}</td>
+                                <td>
+                                    <i class="fa fa-rupee"></i>
+                                    {{ value.cost }}
+                                </td>
+                                <td>{{ value.createdAt | date : 'MMM d, y h:mm a' }}</td>
+                                <td>{{ value.updatedAt | date : 'MMM d, y h:mm a' }}</td>
+                                <td>
+                                    <button class="btn btn-primary" ng-click="remove($index)">
+                                        <i class="fa fa-cogs" aria-hidden="true"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Modal -->
+            <div id="addNewModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Add New Diagnostic Test</h4>
+                        </div>
+                        <div class="modal-body">
+                            <!-- BEGIN FORM-->
+                            <form action="#" class="form-horizontal">
+                                <div class="form-body">
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">Select Category</label>
+                                        <div class="col-md-4">
+                                            <select class="form-control input-circle-left input-circle-right" ng-model="booking.diagnosticTest" ng-options="value._id as value.name for value in categoryList">
+                                                <option value="">--Select--</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">First Name</label>
+                                        <div class="col-md-4">
+                                            <div class="input-group">
+                                                <span class="input-group-addon input-circle-left">
+                                                    <i class="fa fa-envelope"></i>
+                                                </span>
+                                                <input type="text" ng-model="booking.firstname" class="form-control input-circle-right" placeholder="First Name">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">Last Name</label>
+                                        <div class="col-md-4">
+                                            <div class="input-group">
+                                                <span class="input-group-addon input-circle-left">
+                                                    <i class="fa fa-envelope"></i>
+                                                </span>
+                                                <input type="text" ng-model="booking.lastname" class="form-control input-circle-right" placeholder="Last Name">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">Email</label>
+                                        <div class="col-md-4">
+                                            <div class="input-group">
+                                                <span class="input-group-addon input-circle-left">
+                                                    <i class="fa fa-envelope"></i>
+                                                </span>
+                                                <input type="email" ng-model="booking.email" class="form-control input-circle-right" placeholder="Email Address">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">Phone</label>
+                                        <div class="col-md-4">
+                                            <div class="input-group">
+                                                <input type="text" ng-model="booking.phone" class="form-control input-circle-left" placeholder="Phone">
+                                                <span class="input-group-addon input-circle-right">
+                                                    <i class="fa fa-phone-square" aria-hidden="true"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-actions">
+                                    <div class="row">
+                                        <div class="col-md-offset-3 col-md-9">
+                                            <button type="button" class="btn btn-circle green" ng-click="submitBooking()">Submit</button>
+                                            <button type="button" class="btn btn-circle grey-salsa btn-outline">Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <!-- END FORM-->
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <!-- END CONTENT BODY -->
+    </div>
+    <!-- END CONTENT -->
+
+</div>
+<!-- END CONTAINER -->
+
+<!-- BEGIN FOOTER -->
+<% include ../../partials/footer.html %>
+<!-- BEGIN FOOTER -->
+
+<!-- BEGIN CORE PLUGINS -->
+<% include ../../partials/coreplugins.html %>
+<!-- END CORE PLUGINS -->
+
+<script src="/js/lib/angular/angular.js"></script>
+<script src="/js/lib/datatables/jquery.dataTables.js"></script>
+<script src="/js/lib/datatables/dataTables.bootstrap.js"></script>
+<script src="/js/lib/datatables/angular-datatables.js"></script>
+<script src="/js/diagnosticTestModule/diagnosticTestModule.js"></script>
